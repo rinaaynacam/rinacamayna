@@ -191,6 +191,28 @@ test('Form hatada metni korur, ölçü ve Türkçe önizleme çalışır', async
   await expect(page.getByLabel('Hazırlanan mesaj')).toHaveValue(/Çankaya/);
   await page.screenshot({ path: 'test-results/quote-desktop.png', fullPage: true });
 });
+test('Analitik olayları müşteri metni, telefon veya WhatsApp URL parametresi taşımaz', async ({ page }) => {
+  await page.addInitScript(() => {
+    const state = window as unknown as { __rinaEvents: unknown[][]; gtag: (...args: unknown[]) => void };
+    state.__rinaEvents = [];
+    state.gtag = (...args: unknown[]) => state.__rinaEvents.push(args);
+  });
+  await page.goto('/');
+  const privateText = 'OZEL-MUSTERI-METNI-123';
+  await page.getByLabel('İhtiyacınız / ek not').fill(privateText);
+  await page.getByRole('button', { name: 'Mesajı hazırla' }).click();
+  await expect(page.getByRole('region', { name: 'Mesaj önizlemesi' })).toBeVisible();
+  await page.locator('a.hero-button[href^="https://wa.me/"]').evaluate(element => {
+    element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+  });
+  const events = await page.evaluate(() => (window as unknown as { __rinaEvents: unknown[][] }).__rinaEvents);
+  expect(events).toContainEqual(['event', 'quote_prepare']);
+  expect(events).toContainEqual(['event', 'whatsapp_click']);
+  const serialized = JSON.stringify(events);
+  expect(serialized).not.toContain(privateText);
+  expect(serialized).not.toContain('905422313069');
+  expect(serialized).not.toContain('wa.me');
+});
 test('320–1920 px taşma ve ilk ekran kontrolü', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));

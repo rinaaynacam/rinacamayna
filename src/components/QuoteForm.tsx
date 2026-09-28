@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { buildWhatsAppLink, composeQuoteMessage } from '../../baslangic-modulleri/whatsapp.mjs';
 import type { Contact } from '@/lib/contact';
+import { trackAnalyticsEvent } from '@/lib/analytics';
 type Item = { id: number; product: string; width: string; height: string; unit: string; quantity: string };
 const item = (id: number): Item => ({ id, product: '', width: '', height: '', unit: 'mm', quantity: '1' });
 export function QuoteForm({ districts }: { districts: string[] }) {
@@ -23,6 +24,7 @@ export function QuoteForm({ districts }: { districts: string[] }) {
       const contact: Contact = await response.json();
       const message = composeQuoteMessage({ company: form.get('company'), district: form.get('district'), note: form.get('note'), items }, { greeting: contact.greeting });
       setPreview({ message, label: contact.quoteLabel, link: buildWhatsAppLink(contact.number, message) });
+      trackAnalyticsEvent('quote_prepare');
     } catch (err) { setError(err instanceof Error ? err.message : 'Mesaj hazırlanamadı. Yeniden deneyin.'); }
     finally { setBusy(false); }
   }
@@ -35,6 +37,7 @@ export function QuoteForm({ districts }: { districts: string[] }) {
       if (!response.ok) throw new Error('Güncel numara alınamadı. Metniniz korunuyor; yeniden deneyin.');
       const contact: Contact = await response.json();
       const fresh = buildWhatsAppLink(contact.number, preview.message);
+      trackAnalyticsEvent('whatsapp_click');
       // Same-tab navigation avoids popup blockers after the settings check.
       window.location.assign(fresh.href);
     } catch (err) { setError(err instanceof Error ? err.message : 'Bağlantı açılamadı.'); }
