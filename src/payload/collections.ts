@@ -1,6 +1,7 @@
 import type { CollectionConfig, Field } from 'payload';
 import { adminOnly, editorCannotPublish, publishedAndApproved, signedIn, staffField } from '@/lib/access';
 import { richContentField, seoFields, slugField, verificationFields } from './fields';
+import { validateAndSanitizeImageUpload, validatePDFUpload } from '../lib/uploads';
 
 const contentAccess: CollectionConfig['access'] = {
   create: signedIn,
@@ -203,8 +204,9 @@ export const HizmetBolgeleri: CollectionConfig = {
 
 export const Medyalar: CollectionConfig = {
   slug: 'medyalar', labels: { singular: 'Medya', plural: 'Medyalar' },
-  admin: { group: 'Medya ve dosyalar', useAsTitle: 'alt', defaultColumns: ['thumbnail', 'alt', 'filename'], description: 'Logo, kapak ve uygulama görsellerini yükler.' },
+  admin: { group: 'Medya ve dosyalar', useAsTitle: 'alt', defaultColumns: ['thumbnail', 'alt', 'filename'], description: 'Logo, kapak ve uygulama görsellerini yükler. JPEG, PNG, WebP veya AVIF dosyası en fazla 4 MB ve 40 megapiksel olabilir; konum/EXIF bilgisi otomatik temizlenir.' },
   access: { create: signedIn, delete: adminOnly, update: signedIn, read: () => true },
+  hooks: { beforeValidate: [validateAndSanitizeImageUpload] },
   fields: [
     { name: 'alt', label: 'Alternatif metin', type: 'text', required: true, maxLength: 180,
       admin: { description: 'Görseli göremeyen kullanıcıya ne olduğunu anlatır. Görseldeki gerçek içeriği kısa ve nesnel yazın; “resim” diye başlamayın.' } },
@@ -215,6 +217,9 @@ export const Medyalar: CollectionConfig = {
   upload: {
     staticDir: 'media-local', adminThumbnail: 'kucuk', focalPoint: true,
     mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/avif'],
+    pasteURL: false,
+    withMetadata: false,
+    constructorOptions: { limitInputPixels: 40_000_000, failOn: 'warning' },
     imageSizes: [
       { name: 'kucuk', width: 720, height: 480, fit: 'cover', withoutEnlargement: true },
       { name: 'buyuk', width: 1920, height: 1280, fit: 'inside', withoutEnlargement: true },
@@ -225,15 +230,25 @@ export const Medyalar: CollectionConfig = {
 
 export const Dosyalar: CollectionConfig = {
   slug: 'dosyalar', labels: { singular: 'Genel dosya', plural: 'Genel dosyalar' },
-  admin: { group: 'Medya ve dosyalar', useAsTitle: 'baslik', description: 'Ziyaretçiye sunulabilecek PDF belgelerini yönetir; proje fotoğrafları için Medyalar bölümünü kullanın.' },
+  admin: { group: 'Medya ve dosyalar', useAsTitle: 'baslik', description: 'Ziyaretçiye indirilebilir olarak sunulabilecek en fazla 4 MB PDF belgelerini yönetir; özel veya müşteri bilgisi içeren dosya yüklemeyin. Proje fotoğrafları için Medyalar bölümünü kullanın.' },
   access: { create: signedIn, delete: adminOnly, update: signedIn, read: () => true },
+  hooks: { beforeValidate: [validatePDFUpload] },
   fields: [
     { name: 'baslik', label: 'Dosya başlığı', type: 'text', required: true,
       admin: { description: 'PDF bağlantısı yanında ziyaretçiye gösterilecek anlaşılır belge adı.' } },
     { name: 'aciklama', label: 'Dosya açıklaması', type: 'textarea',
       admin: { description: 'Belgenin ne içerdiğini ve hangi durumda kullanılacağını açıklar.' } }, ...verificationFields(),
   ],
-  upload: { staticDir: 'public-files', mimeTypes: ['application/pdf'], crop: false, focalPoint: false },
+  upload: {
+    staticDir: 'public-files', mimeTypes: ['application/pdf'], crop: false, focalPoint: false,
+    pasteURL: false,
+    modifyResponseHeaders: ({ headers }) => {
+      headers.set('Content-Disposition', 'attachment');
+      headers.set('Content-Security-Policy', "default-src 'none'; sandbox");
+      headers.set('X-Content-Type-Options', 'nosniff');
+      return headers;
+    },
+  },
 };
 
 export const Yonlendirmeler: CollectionConfig = {

@@ -25,6 +25,32 @@ test('Anonim erişim, kapalı kayıt ve parola kurtarma', async ({ request }) =>
   expect(response.status()).toBe(200);
   expect(Object.keys(await response.json()).sort()).toEqual(['greeting','label','message','number','quoteLabel']);
 });
+test('Medya yüklemesi gerçek dosya imzasını doğrular ve geçici kabul dosyasını temizler', async ({ request }) => {
+  const login = await request.post('/api/yoneticiler/login', { data: { username: credentials.RINA_ADMIN_USERNAME, password: credentials.RINA_ADMIN_PASSWORD } });
+  expect(login.ok()).toBeTruthy();
+  const headers = { Authorization: `JWT ${(await login.json()).token}` };
+  const fields = JSON.stringify({ alt: 'Geçici medya güvenlik kontrolü', kaynak: 'Otomatik kabul testi' });
+
+  const spoofed = await request.post('/api/medyalar', { headers, multipart: {
+    _payload: fields,
+    file: { name: 'sahte.jpg', mimeType: 'image/jpeg', buffer: Buffer.from('<script>alert(1)</script>') },
+  } });
+  expect(spoofed.status()).toBe(400);
+  expect(await spoofed.text()).toMatch(/Invalid MIME type|gerçek biçimi/);
+
+  const valid = await request.post('/api/medyalar', { headers, multipart: {
+    _payload: fields,
+    file: { name: 'gecici-medya-kontrolu.jpg', mimeType: 'image/jpeg', buffer: readFileSync('public/design-reference/partition.jpg') },
+  } });
+  expect(valid.status(), await valid.text()).toBe(201);
+  const doc = (await valid.json()).doc;
+  try {
+    expect(doc.mimeType).toBe('image/jpeg');
+    expect(doc.filesize).toBeLessThanOrEqual(4_000_000);
+  } finally {
+    expect((await request.delete(`/api/medyalar/${doc.id}`, { headers })).ok()).toBeTruthy();
+  }
+});
 test('CMS numara güncellemesi tüm CTA ve açık formda kullanılır; geçersiz numara reddedilir', async ({ page, request }) => {
   const login = await request.post('/api/yoneticiler/login', { data: { username: credentials.RINA_ADMIN_USERNAME, password: credentials.RINA_ADMIN_PASSWORD } });
   expect(login.ok()).toBeTruthy();

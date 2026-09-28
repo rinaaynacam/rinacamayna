@@ -41,6 +41,13 @@ export default buildConfig({
   serverURL: env.siteURL,
   cors: [env.siteURL], csrf: [env.siteURL],
   graphQL: { disable: true },
+  upload: {
+    abortOnLimit: true,
+    requestSizeLimit: 4_400_000,
+    responseOnLimit: 'Yükleme isteği izin verilen boyutu aşıyor.',
+    safeFileNames: true,
+    preserveExtension: 5,
+  },
   editor: lexicalEditor(),
   sharp,
   // Payload's default adapter logs email bodies; explicitly refuse all mail instead.
