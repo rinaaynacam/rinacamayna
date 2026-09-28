@@ -276,7 +276,7 @@ export interface Hizmetler {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * Logo, kapak ve uygulama görsellerini yükler.
+ * Logo, kapak ve uygulama görsellerini yükler. JPEG, PNG, WebP veya AVIF dosyası en fazla 4 MB ve 40 megapiksel olabilir; konum/EXIF bilgisi otomatik temizlenir.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "medyalar".
@@ -803,7 +803,7 @@ export interface HizmetBolgeleri {
   createdAt: string;
 }
 /**
- * Ziyaretçiye sunulabilecek PDF belgelerini yönetir; proje fotoğrafları için Medyalar bölümünü kullanın.
+ * Ziyaretçiye indirilebilir olarak sunulabilecek en fazla 4 MB PDF belgelerini yönetir; özel veya müşteri bilgisi içeren dosya yüklemeyin. Proje fotoğrafları için Medyalar bölümünü kullanın.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "dosyalar".
