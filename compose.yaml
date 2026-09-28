@@ -1,0 +1,31 @@
+name: rina-cam-ayna
+services:
+  db:
+    image: postgres:17.6-alpine
+    env_file: .env.db
+    environment:
+      POSTGRES_USER: rina
+      POSTGRES_DB: rina_dev
+    ports:
+      - "127.0.0.1:15432:5432"
+    volumes:
+      - rina_dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rina -d rina_dev"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  db-test:
+    image: postgres:17.6-alpine
+    profiles: [test]
+    env_file: .env.db
+    environment:
+      POSTGRES_USER: rina
+      POSTGRES_DB: rina_test
+    ports:
+      - "127.0.0.1:15433:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+volumes:
+  rina_dev:
+

@@ -1,0 +1,56 @@
+{
+  "name": "rina-cam-ayna",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.18.0 <23"
+  },
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test:e2e": "playwright test",
+    "test:pagespeed": "node scripts/lighthouse-budget.mjs",
+    "cloud:preflight": "node scripts/cloud-preflight.mjs",
+    "test": "node --test baslangic-modulleri/*.test.mjs tests/*.test.mjs",
+    "payload:migrate": "node --env-file=.env.local --import tsx node_modules/payload/bin.js migrate",
+    "payload:migrate:create": "node --env-file=.env.local --import tsx node_modules/payload/bin.js migrate:create",
+    "payload:types": "node --env-file=.env.local --import tsx node_modules/payload/bin.js generate:types",
+    "payload:importmap": "node --env-file=.env.local --import tsx node_modules/payload/bin.js generate:importmap",
+    "seed:initial": "node --env-file=.env.local --import tsx scripts/seed.ts",
+    "seed:content": "node --env-file=.env.local --import tsx scripts/seed-content.ts",
+    "admin:bootstrap": "node --env-file=.env.local --import tsx scripts/admin.ts",
+    "admin:recover": "node --env-file=.env.local --import tsx scripts/admin.ts --reset"
+  },
+  "dependencies": {
+    "@fontsource/ibm-plex-sans": "5.3.0",
+    "@fontsource/manrope": "5.3.0",
+    "@payloadcms/db-postgres": "3.90.2",
+    "@payloadcms/next": "3.90.2",
+    "@payloadcms/richtext-lexical": "3.90.2",
+    "@payloadcms/storage-s3": "3.90.2",
+    "@payloadcms/translations": "3.90.2",
+    "graphql": "16.11.0",
+    "motion": "^13.4.4",
+    "next": "16.3.6",
+    "payload": "3.90.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "sharp": "0.35.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "agent-browser": "^0.27.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "16.3.6",
+    "lighthouse": "^12.8.2",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}

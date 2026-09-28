@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 2,
+  "site": {
+    "brandName": "Rina Cam & Ayna",
+    "canonicalUrl": "https://rinacamayna.com",
+    "locale": "tr-TR",
+    "primaryAudience": "Ankara merkezi ve tüm ilçelerinde cam veya ayna işi yaptırmak isteyen bireysel ve kurumsal müşteriler",
+    "audienceSegments": [
+      "Bireysel müşteriler ve ev ihtiyaçları",
+      "Mağaza, ofis ve diğer işletmeler",
+      "Mimarlar, iç mimarlar ve dekorasyon ekipleri",
+      "Müteahhitler ve proje sahipleri",
+      "Mobilya üreticileri ve atölyeler"
+    ]
+  },
+  "targetArea": {
+    "city": "Ankara",
+    "label": "Ankara merkezi ve tüm ilçeleri",
+    "districts": [
+      "Akyurt",
+      "Altındağ",
+      "Ayaş",
+      "Bala",
+      "Beypazarı",
+      "Çamlıdere",
+      "Çankaya",
+      "Çubuk",
+      "Elmadağ",
+      "Etimesgut",
+      "Evren",
+      "Gölbaşı",
+      "Güdül",
+      "Haymana",
+      "Kahramankazan",
+      "Kalecik",
+      "Keçiören",
+      "Kızılcahamam",
+      "Mamak",
+      "Nallıhan",
+      "Polatlı",
+      "Pursaklar",
+      "Sincan",
+      "Şereflikoçhisar",
+      "Yenimahalle"
+    ],
+    "districtSource": "https://ankara.ktb.gov.tr/TR-152322/ilceler.html",
+    "districtSourceCheckedAt": "2026-09-24",
+    "operationalCoverageStatus": "needs_confirmation",
+    "fulfillmentPolicy": "Her ilçeden iletişim ve teklif talebi hedeflenir. Yerinde ölçü, montaj, nakliye, ücret ve termin hizmet ve konuma göre işletmeyle netleştirilir.",
+    "cmsMapping": "İlk kurulumda hizmet_bolgeleri kayıtlarını hazırla. Hedef liste tek başına detay sayfası yayını, şube kaydı veya Service.areaServed doğrulaması değildir."
+  },
+  "homepageDraft": {
+    "headline": "Ankara'da cam ve ayna, ihtiyacınıza özel.",
+    "description": "Eviniz, iş yeriniz veya projeniz için cam ve ayna ihtiyacınızı konuşalım. Ankara merkezi ve tüm ilçelerinden bize WhatsApp ile ulaşın; ihtiyacınızı, varsa ölçülerinizi ve ilçenizi paylaşın.",
+    "seoTitle": "Ankara Cam ve Ayna | Rina Cam & Ayna"
+  },
+  "contact": {
+    "whatsappNumber": "905422313069",
+    "primaryCta": "WhatsApp'tan yazın",
+    "quoteCta": "WhatsApp'ta devam et",
+    "generalMessage": "Merhaba, cam veya ayna ihtiyacım için bilgi almak istiyorum.",
+    "quoteGreeting": "Merhaba, cam veya ayna ihtiyacım için teklif almak istiyorum.",
+    "address": null,
+    "openingHours": null
+  },
+  "theme": {
+    "paper": "#E9EEF1",
+    "ink": "#172126",
+    "accent": "#FF6254",
+    "line": "#A8B6BD",
+    "formBackground": "#D9E4E9",
+    "headingFont": "Manrope",
+    "bodyFont": "IBM Plex Sans"
+  },
+  "defaults": {
+    "contentStatus": "draft",
+    "measurementUnit": "mm",
+    "maxQuoteRows": 10,
+    "analyticsEnabled": false,
+    "customerFileUploadEnabled": false,
+    "manualLeadTrackingEnabled": true
+  },
+  "seedPolicy": "Yalnız ilk kurulumda eksik kayıtları oluştur; mevcut CMS verisini değiştirme. Bu JSON production veri kaynağı değildir."
+}
