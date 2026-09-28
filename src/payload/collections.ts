@@ -1,6 +1,6 @@
 import type { CollectionConfig, Field } from 'payload';
 import { adminOnly, editorCannotPublish, publishedAndApproved, signedIn, staffField } from '@/lib/access';
-import { richContentField, seoFields, slugField, verificationFields } from './fields';
+import { richContentField, safeRedirectSource, safeRedirectTarget, seoFields, slugField, verificationFields } from './fields';
 import { validateAndSanitizeImageUpload, validatePDFUpload } from '../lib/uploads';
 
 const contentAccess: CollectionConfig['access'] = {
@@ -257,11 +257,12 @@ export const Yonlendirmeler: CollectionConfig = {
   access: { create: adminOnly, delete: adminOnly, read: () => true, update: adminOnly },
   fields: [
     { name: 'kaynak', label: 'Eski site içi yol', type: 'text', required: true, unique: true,
+      maxLength: 500, validate: safeRedirectSource,
       admin: { description: 'Ziyaretçinin veya arama motorunun gelebileceği eski yol. Örnek: /eski-hizmet.' } },
     { name: 'hedef', label: 'Yeni site içi yol', type: 'text', required: true,
+      maxLength: 500,
       admin: { description: 'Eski yolun yönleneceği çalışan yeni sayfa. Örnek: /hizmetler/ozel-olcu-ayna.' },
-      validate: (value: unknown, { siblingData }: { siblingData: Record<string, unknown> }) => typeof value === 'string' && value.startsWith('/') && !value.startsWith('//') && value !== siblingData?.kaynak
-        ? true : 'Geçerli, farklı bir site içi hedef girin.' },
+      validate: (value: unknown, { siblingData }: { siblingData: Record<string, unknown> }) => safeRedirectTarget(value, siblingData?.kaynak) },
     { name: 'kalici', label: 'Kalıcı yönlendirme (308)', type: 'checkbox', defaultValue: true,
       admin: { description: 'Adres değişikliği kalıcıysa açık bırakın. Geçici yönlendirme yalnız gerçekten geçici durumlarda kullanılmalıdır.' } },
   ],

@@ -150,6 +150,25 @@ test('Sitemap, robots, security headers and JSON-LD only expose publishable cont
     }
   }
 });
+test('CMS yönlendirmesi güvenli site içi hedefe 308 döner ve dış hedef reddedilir', async ({ request }) => {
+  const login = await request.post('/api/yoneticiler/login', { data: { username: credentials.RINA_ADMIN_USERNAME, password: credentials.RINA_ADMIN_PASSWORD } });
+  expect(login.ok()).toBeTruthy();
+  const headers = { Authorization: `JWT ${(await login.json()).token}` };
+  const source = `/eski-kabul-${Date.now()}`;
+  const unsafe = await request.post('/api/yonlendirmeler', { headers, data: { kaynak: `${source}-dis`, hedef: '//evil.example', kalici: true } });
+  expect(unsafe.status()).toBe(400);
+
+  const created = await request.post('/api/yonlendirmeler', { headers, data: { kaynak: source, hedef: '/hizmetler', kalici: true } });
+  expect(created.status(), await created.text()).toBe(201);
+  const doc = (await created.json()).doc;
+  try {
+    const response = await request.get(source, { maxRedirects: 0 });
+    expect(response.status()).toBe(308);
+    expect(response.headers().location).toBe('/hizmetler');
+  } finally {
+    expect((await request.delete(`/api/yonlendirmeler/${doc.id}`, { headers })).ok()).toBeTruthy();
+  }
+});
 test('Form hatada metni korur, ölçü ve Türkçe önizleme çalışır', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('form', { name: 'WhatsApp teklif mesajı hazırlama formu' })).toBeVisible();

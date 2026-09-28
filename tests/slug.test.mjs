@@ -1,9 +1,21 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createSlug } from '../src/payload/fields.ts';
+import { createSlug, safeRedirectSource, safeRedirectTarget } from '../src/payload/fields.ts';
 
 test('Türkçe başlık güvenli URL kısa adına dönüşür', () => {
   assert.equal(createSlug('Ev ve Yaşam Alanları'), 'ev-ve-yasam-alanlari');
   assert.equal(createSlug('Özel Ölçü / İç Mekân'), 'ozel-olcu-ic-mekan');
   assert.equal(createSlug('  Duş Camı & Ayna  '), 'dus-cami-ayna');
+});
+
+test('Yönlendirmeler yalnız güvenli site içi kaynak ve hedef kabul eder', () => {
+  assert.equal(safeRedirectSource('/eski-hizmet/ayna'), true);
+  assert.equal(safeRedirectTarget('/hizmetler/ozel-olcu-ayna', '/eski-hizmet'), true);
+  for (const value of ['https://evil.example', '//evil.example', '/\\evil.example', '/%2fevil.example', '/satir\nsonu']) {
+    assert.notEqual(safeRedirectTarget(value, '/eski'), true);
+  }
+  for (const value of ['/', '//evil', '/Eski Sayfa', '/eski?x=1', '/%2feski']) {
+    assert.notEqual(safeRedirectSource(value), true);
+  }
+  assert.notEqual(safeRedirectTarget('/eski', '/eski'), true);
 });

@@ -61,6 +61,24 @@ export const safeInternalLink = (value: unknown): true | string => {
   return true;
 };
 
+const unsafeRedirectEncoding = /%(?:2f|5c|00|0d|0a)/i;
+
+export const safeRedirectSource = (value: unknown): true | string => {
+  if (typeof value !== 'string' || value.length > 500 || unsafeRedirectEncoding.test(value)
+    || !/^\/[a-z0-9]+(?:[/-][a-z0-9]+)*$/.test(value)) {
+    return 'Kaynak, /eski-sayfa veya /eski/alt-sayfa biçiminde güvenli bir site içi yol olmalıdır.';
+  }
+  return true;
+};
+
+export const safeRedirectTarget = (value: unknown, source?: unknown): true | string => {
+  if (typeof value !== 'string' || value.length > 500 || value === source || unsafeRedirectEncoding.test(value)
+    || !value.startsWith('/') || value.startsWith('//') || /[\\\u0000-\u001f]/.test(value)) {
+    return 'Hedef, kaynaktan farklı ve / ile başlayan güvenli bir site içi yol olmalıdır.';
+  }
+  return true;
+};
+
 export const menuArray = (name: string, label: string): Field => ({
   name, label, type: 'array', maxRows: 12,
   admin: { description: 'Satır sırası sitedeki bağlantı sırasını belirler. Yalnız site içi sayfa veya bölüm bağlantısı kullanılır.' }, fields: [
