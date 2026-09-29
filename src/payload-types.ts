@@ -291,6 +291,8 @@ export interface Medyalar {
    * Fotoğrafın kim tarafından çekildiği veya kullanım hakkının nereden geldiğine dair dahili kanıttır; sitede gösterilmez.
    */
   kaynak: string;
+  prefix?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -818,6 +820,8 @@ export interface Dosyalar {
    * Belgenin ne içerdiğini ve hangi durumda kullanılacağını açıklar.
    */
   aciklama?: string | null;
+  prefix?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -1228,6 +1232,8 @@ export interface HizmetBolgeleriSelect<T extends boolean = true> {
 export interface MedyalarSelect<T extends boolean = true> {
   alt?: T;
   kaynak?: T;
+  prefix?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -1281,6 +1287,8 @@ export interface MedyalarSelect<T extends boolean = true> {
 export interface DosyalarSelect<T extends boolean = true> {
   baslik?: T;
   aciklama?: T;
+  prefix?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
