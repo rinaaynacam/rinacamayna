@@ -23,7 +23,9 @@
     "seed:initial": "node --env-file=.env.local --import tsx scripts/seed.ts",
     "seed:content": "node --env-file=.env.local --import tsx scripts/seed-content.ts",
     "admin:bootstrap": "node --env-file=.env.local --import tsx scripts/admin.ts",
-    "admin:recover": "node --env-file=.env.local --import tsx scripts/admin.ts --reset"
+    "admin:recover": "node --env-file=.env.local --import tsx scripts/admin.ts --reset",
+    "admin:bootstrap:production": "node --env-file=.env.production.local --env-file=.env.admin --import tsx scripts/admin.ts --production",
+    "admin:recover:production": "node --env-file=.env.production.local --env-file=.env.admin --import tsx scripts/admin.ts --production --reset"
   },
   "dependencies": {
     "@fontsource/ibm-plex-sans": "5.3.0",
