@@ -44,7 +44,7 @@ export const SiteAyarlari: GlobalConfig = {
     { name: 'kisa_aciklama', label: 'Kısa firma açıklaması', type: 'textarea', required: true, maxLength: 300,
       admin: { description: 'Özel SEO açıklaması boş olduğunda ana sayfanın varsayılan meta açıklaması olur; sayfa gövdesinde otomatik görünmez.' } },
     { name: 'logo', label: 'Üst ve alt bilgi logosu', type: 'upload', relationTo: 'medyalar',
-      admin: { description: 'Seçildiğinde sitenin sol üst ve alt bölümündeki yazının yerini alır. PageSpeed için şeffaf WebP/SVG ve en fazla 100 KB kullanın; daha büyük dosyada hızlı yazı logosu gösterilir.' } },
+      admin: { description: 'Seçildiğinde sitenin sol üst ve alt bölümündeki kısa marka yazısının yerini alır. Sistem küçük ekranlar için optimize edilmiş türevi kullanır; en iyi sonuç için şeffaf WebP veya PNG yükleyin.' } },
     { name: 'favicon', label: 'Tarayıcı sekmesi simgesi', type: 'upload', relationTo: 'medyalar',
       admin: { description: 'Tarayıcı sekmesi ve yer imlerinde görünür. En fazla 100 KB kullanın; daha büyük dosyada hızlı varsayılan Rina simgesi gösterilir.' } },
     { name: 'renkler', label: 'Site renkleri', type: 'group',

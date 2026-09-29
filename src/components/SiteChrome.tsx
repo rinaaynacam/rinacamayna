@@ -10,8 +10,7 @@ function siteHref(value: string) {
 }
 
 function SiteBrand({ site }: { site: SiteAyarlari }) {
-  const candidate = mediaValue(site.logo);
-  const logo = candidate?.filesize && candidate.filesize <= 100_000 ? candidate : null;
+  const logo = mediaValue(site.logo);
   return <Link href="/" className={`brand ${logo ? 'has-brand-mark' : ''}`}>
     {logo ? <span className="brand-mark"><CmsImage media={logo} sizes="64px" /></span> : <strong>{site.marka_kisa}</strong>}
     <span>{site.marka_alt}</span>
