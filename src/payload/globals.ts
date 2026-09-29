@@ -46,7 +46,7 @@ export const SiteAyarlari: GlobalConfig = {
     { name: 'logo', label: 'Üst ve alt bilgi logosu', type: 'upload', relationTo: 'medyalar',
       admin: { description: 'Seçildiğinde sitenin sol üst ve alt bölümündeki kısa marka yazısının yerini alır. Sistem küçük ekranlar için optimize edilmiş türevi kullanır; en iyi sonuç için şeffaf WebP veya PNG yükleyin.' } },
     { name: 'favicon', label: 'Tarayıcı sekmesi simgesi', type: 'upload', relationTo: 'medyalar',
-      admin: { description: 'Tarayıcı sekmesi ve yer imlerinde görünür. En fazla 100 KB kullanın; daha büyük dosyada hızlı varsayılan Rina simgesi gösterilir.' } },
+      admin: { description: 'Tarayıcı sekmesi ve yer imlerinde görünür. Boş bırakırsanız üst ve alt bilgi logosu otomatik kullanılır. Kare WebP veya PNG en iyi sonucu verir.' } },
     { name: 'renkler', label: 'Site renkleri', type: 'group',
       admin: { description: 'Sitenin genel zemin, yazı, vurgu, çizgi ve form renklerini altı haneli HEX kodlarıyla yönetin. Örnek: #ff6254.' },
       fields: [

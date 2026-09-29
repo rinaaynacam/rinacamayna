@@ -9,14 +9,14 @@ export function mediaPath(value: number | Medyalar | null | undefined): string |
   if (!image?.url) return null;
   if (!image.url.startsWith('http')) return image.url;
   const parsed = new URL(image.url);
-  return parsed.pathname.startsWith('/api/medyalar/file/') ? parsed.pathname : image.url;
+  return /^\/(api\/medyalar\/file|medyalar)\//.test(parsed.pathname) ? parsed.pathname : image.url;
 }
 
 function safeMediaPath(value: string | null | undefined): string | null {
   if (!value) return null;
   if (!value.startsWith('http')) return value;
   const parsed = new URL(value);
-  return parsed.pathname.startsWith('/api/medyalar/file/') ? parsed.pathname : value;
+  return /^\/(api\/medyalar\/file|medyalar)\//.test(parsed.pathname) ? parsed.pathname : value;
 }
 
 export function absoluteMediaURL(value: number | Medyalar | null | undefined, origin: string): string | null {

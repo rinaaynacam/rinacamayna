@@ -50,15 +50,18 @@ export async function generateMetadata(): Promise<Metadata> {
   const share = site.seo?.paylasim_gorseli;
   const shareObject = share && typeof share === 'object' ? share : null;
   const shareURL = absoluteMediaURL(shareObject, canonical);
-  const faviconMedia = mediaValue(site.favicon);
-  const favicon = faviconMedia?.filesize && faviconMedia.filesize <= 100_000 ? mediaPath(faviconMedia) : '/icon.svg';
+  const faviconMedia = mediaValue(site.favicon) ?? mediaValue(site.logo);
+  const faviconPath = mediaPath(faviconMedia);
+  const favicon = faviconPath
+    ? `${faviconPath}${faviconPath.includes('?') ? '&' : '?'}v=${encodeURIComponent(faviconMedia?.updatedAt ?? '1')}`
+    : '/icon.svg';
   return {
     metadataBase: new URL(canonical),
     title: site.seo?.baslik || site.firma_adi,
     description: site.seo?.aciklama || site.kisa_aciklama,
     alternates: { canonical: '/' },
     robots: { index: indexing, follow: indexing },
-    icons: { icon: favicon || '/icon.svg', shortcut: favicon || '/icon.svg' },
+    icons: { icon: favicon, shortcut: favicon },
     openGraph: shareURL ? { images: [{ url: shareURL, alt: shareObject?.alt || site.firma_adi }] } : undefined,
     verification: integrations.search_console_dogrulama && /^[A-Za-z0-9_-]{10,200}$/.test(integrations.search_console_dogrulama)
       ? { google: integrations.search_console_dogrulama } : undefined,

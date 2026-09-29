@@ -1,8 +1,9 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import type { AltBilgi, SiteAyarlari, UstBilgi } from '@/payload-types';
 import type { Contact } from '@/lib/contact';
 import { buildWhatsAppLink, formatTrWhatsAppNumber } from '../../baslangic-modulleri/whatsapp.mjs';
-import { CmsImage, mediaValue } from './CmsImage';
+import { mediaPath, mediaValue } from './CmsImage';
 import { ContactLink } from './ContactLink';
 
 function siteHref(value: string) {
@@ -11,8 +12,11 @@ function siteHref(value: string) {
 
 function SiteBrand({ site }: { site: SiteAyarlari }) {
   const logo = mediaValue(site.logo);
+  const logoPath = mediaPath(logo);
   return <Link href="/" className={`brand ${logo ? 'has-brand-mark' : ''}`}>
-    {logo ? <span className="brand-mark"><CmsImage media={logo} sizes="64px" /></span> : <strong>{site.marka_kisa}</strong>}
+    {logo && logoPath
+      ? <span className="brand-mark"><Image src={logoPath} alt={logo.alt} fill sizes="54px" /></span>
+      : <strong>{site.marka_kisa}</strong>}
     <span>{site.marka_alt}</span>
   </Link>;
 }
