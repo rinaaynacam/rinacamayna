@@ -50,7 +50,7 @@ export default async function ContentHubPage() {
       </RevealSection>
 
       <section id="sss" className="hub-section section-pad">
-        <div className="hub-section-title"><p className="eyebrow">05 / SIK SORULAN SORULAR</p><h2>KISA VE NET<br />YANITLAR</h2><p>İlk ölçü, fotoğraf paylaşımı, fiyatlandırma ve uygulama süreci hakkında sık sorulanlar.</p></div>
+        <div className="hub-section-title"><p className="eyebrow">05 / SIK SORULAN SORULAR</p><h2>KISA VE NET<br />YANITLAR</h2></div>
         <div className="faq-list">{library.faqs.map(item => <details key={item.id}><summary>{item.soru}</summary><p>{item.yanit}</p></details>)}</div>
         <Link className="hub-more-link" href="/sss">Tüm soruları aç <span aria-hidden="true">↗</span></Link>
       </section>
