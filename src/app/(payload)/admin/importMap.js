@@ -23,6 +23,7 @@ import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { AdminIcon as AdminIcon_5fee7b1d7887f8ee4c45775348e4cb18 } from '@/components/AdminBrand'
 import { AdminLogo as AdminLogo_5fee7b1d7887f8ee4c45775348e4cb18 } from '@/components/AdminBrand'
+import { PendingReviewsBadge as PendingReviewsBadge_edcaa4ccfe76353f2d38a9cb65589a1f } from '@/components/PendingReviewsBadge'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -52,5 +53,6 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@/components/AdminBrand#AdminIcon": AdminIcon_5fee7b1d7887f8ee4c45775348e4cb18,
   "@/components/AdminBrand#AdminLogo": AdminLogo_5fee7b1d7887f8ee4c45775348e4cb18,
+  "@/components/PendingReviewsBadge#PendingReviewsBadge": PendingReviewsBadge_edcaa4ccfe76353f2d38a9cb65589a1f,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

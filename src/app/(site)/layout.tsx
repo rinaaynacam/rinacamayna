@@ -13,32 +13,6 @@ import config from '@payload-config';
 import './styles.css';
 
 const safeColor = (value: string | null | undefined, fallback: string) => /^#[0-9a-fA-F]{6}$/.test(value ?? '') ? value as string : fallback;
-const hexChannels = (value: string) => [1, 3, 5].map(index => Number.parseInt(value.slice(index, index + 2), 16));
-const luminance = (value: string) => {
-  const channels = hexChannels(value).map(channel => {
-    const normalized = channel / 255;
-    return normalized <= 0.03928 ? normalized / 12.92 : ((normalized + 0.055) / 1.055) ** 2.4;
-  });
-  return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
-};
-const contrast = (first: string, second: string) => {
-  const values = [luminance(first), luminance(second)].sort((a, b) => b - a);
-  return (values[0] + 0.05) / (values[1] + 0.05);
-};
-const mix = (first: string, second: string, amount: number) => {
-  const a = hexChannels(first);
-  const b = hexChannels(second);
-  return `#${a.map((channel, index) => Math.round(channel * (1 - amount) + b[index] * amount).toString(16).padStart(2, '0')).join('')}`;
-};
-const accessibleAccent = (accent: string, paper: string, ink: string) => {
-  if (contrast(accent, paper) >= 4.5) return accent;
-  for (let amount = 0.05; amount <= 1; amount += 0.05) {
-    const candidates = [mix(accent, ink, amount), mix(accent, '#000000', amount), mix(accent, '#ffffff', amount)];
-    const candidate = candidates.find(value => contrast(value, paper) >= 4.5);
-    if (candidate) return candidate;
-  }
-  return contrast('#000000', paper) >= contrast('#ffffff', paper) ? '#000000' : '#ffffff';
-};
 
 export async function generateMetadata(): Promise<Metadata> {
   const payload = await getPayload({ config });
@@ -84,7 +58,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
     '--paper': paper,
     '--ink': ink,
     '--accent': accent,
-    '--accent-text': accessibleAccent(accent, paper, ink),
+    '--accent-text': accent,
     '--line': safeColor(site.renkler?.cizgi, '#8d9da5'),
     '--form': safeColor(site.renkler?.form_zemini, '#d9e4e9'),
     '--white': safeColor(site.renkler?.acik_metin, '#f7fafb'),

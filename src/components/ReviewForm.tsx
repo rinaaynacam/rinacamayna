@@ -31,7 +31,6 @@ export function ReviewForm() {
     <div>
       <p className="eyebrow">DENEYİMİNİZİ PAYLAŞIN</p>
       <h2 id="yorum-birak-baslik">Yorum bırakın.</h2>
-      <p>Yorumunuz önce yönetim panelinde incelenir. Onaylanırsa adınızla birlikte bu sayfada yayınlanır.</p>
     </div>
     <form onSubmit={submit}>
       <label htmlFor="yorum-ad">Adınız veya kurum adınız</label>

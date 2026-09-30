@@ -59,6 +59,7 @@ export default buildConfig({
     importMap: { baseDir: dirname },
     meta: { titleSuffix: ' — Mebalci Yönetim' },
     components: {
+      beforeNavLinks: ['@/components/PendingReviewsBadge#PendingReviewsBadge'],
       graphics: {
         Logo: '@/components/AdminBrand#AdminLogo',
         Icon: '@/components/AdminBrand#AdminIcon',
