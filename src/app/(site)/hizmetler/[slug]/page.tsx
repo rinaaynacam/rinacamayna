@@ -3,10 +3,11 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { RichText } from '@payloadcms/richtext-lexical/react';
 import { absoluteMediaURL, CmsImage, mediaValue } from '@/components/CmsImage';
+import { ApplicationCard } from '@/components/ApplicationCard';
 import { ContactLink } from '@/components/ContactLink';
 import { SiteFooter, SiteHeader } from '@/components/SiteChrome';
 import { StructuredData } from '@/components/StructuredData';
-import { getPublishedService, getSiteChromeData } from '@/lib/cms';
+import { getPublishedService, getServiceApplications, getSiteChromeData } from '@/lib/cms';
 import { canonical } from '@/lib/env.mjs';
 
 export const dynamic = 'force-dynamic';
@@ -31,13 +32,15 @@ export default async function ServiceDetailPage({ params }: PageProps) {
   const { slug } = await params;
   const [service, chrome] = await Promise.all([getPublishedService(slug), getSiteChromeData()]);
   if (!service) notFound();
+  const relatedApplications = await getServiceApplications(service.id, 4);
   const image = mediaValue(service.kapak_gorseli);
   const serviceContact = service.whatsapp_mesaji ? { ...chrome.contact, message: service.whatsapp_mesaji } : chrome.contact;
 
   return <>
     <StructuredData data={{
       '@context': 'https://schema.org', '@type': 'Service',
-      name: service.ad, description: service.ozet, url: `${canonical}/hizmetler/${service.slug}`,
+      name: service.ad, serviceType: service.ad, description: service.ozet, url: `${canonical}/hizmetler/${service.slug}`,
+      ...(image ? { image: absoluteMediaURL(image, canonical) } : {}),
       provider: { '@type': 'LocalBusiness', '@id': `${canonical}/#isletme`, name: chrome.site.firma_adi },
       areaServed: { '@type': 'AdministrativeArea', name: 'Ankara' },
     }} />
@@ -55,6 +58,11 @@ export default async function ServiceDetailPage({ params }: PageProps) {
       </header>
 
       {service.aciklama && <article className="rich-content"><RichText data={service.aciklama} /></article>}
+
+      {relatedApplications.docs.length > 0 && <section className="service-applications section-pad">
+        <div className="service-applications-heading"><div><p className="eyebrow">GERÇEK UYGULAMALAR</p><h2>Bu hizmetle yapılan işler.</h2></div>{relatedApplications.totalDocs > 3 && <Link className="text-link" href={`/uygulamalar?kategori=${encodeURIComponent(service.slug ?? '')}`}>Tümünü görün ↗</Link>}</div>
+        <div className="application-gallery related-application-gallery">{relatedApplications.docs.slice(0, 3).map((application, index) => <ApplicationCard key={application.id} application={application} index={index} />)}</div>
+      </section>}
 
       <section className="service-relations section-pad">
         <div><p className="eyebrow">KULLANIM ALANLARI</p>{service.kullanim_alanlari?.map(item => typeof item === 'object' && <article key={item.id}><h2>{item.ad}</h2><p>{item.ozet}</p></article>)}</div>

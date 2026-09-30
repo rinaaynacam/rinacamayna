@@ -9,9 +9,10 @@ const link = (label: unknown, path: string) => `- [${text(label)}](${canonical}$
 
 export async function GET() {
   const payload = await getPayload({ config });
-  const [site, services, guides] = await Promise.all([
+  const [site, services, applications, guides] = await Promise.all([
     payload.findGlobal({ slug: 'site_ayarlari', depth: 0, overrideAccess: false }),
     payload.find({ collection: 'hizmetler', depth: 0, draft: false, limit: 100, sort: 'sira', overrideAccess: false }),
+    payload.find({ collection: 'uygulamalar', depth: 0, draft: false, limit: 100, sort: 'sira', overrideAccess: false }),
     payload.find({ collection: 'rehber_yazilari', depth: 0, draft: false, limit: 100, sort: '-updatedAt', overrideAccess: false }),
   ]);
 
@@ -38,6 +39,12 @@ export async function GET() {
     ...services.docs
       .filter(service => service.seo?.indekslenebilir !== false)
       .map(service => link(service.ad, `/hizmetler/${service.slug}`)),
+    '',
+    '## Gerçek uygulamalar',
+    '',
+    ...applications.docs
+      .filter(application => application.seo?.indekslenebilir !== false)
+      .map(application => link(application.ad, `/uygulamalar/${application.slug}`)),
     '',
     '## Rehberler',
     '',

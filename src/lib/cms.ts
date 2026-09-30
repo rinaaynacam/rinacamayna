@@ -73,6 +73,22 @@ export async function getPublishedApplications() {
   return result.docs;
 }
 
+export async function getPublishedApplication(slug: string) {
+  const payload = await getPayload({ config });
+  return (await payload.find({
+    collection: 'uygulamalar', depth: 2, draft: false, limit: 1,
+    where: { slug: { equals: slug } }, overrideAccess: false,
+  })).docs[0] ?? null;
+}
+
+export async function getServiceApplications(serviceId: number, limit = 4) {
+  const payload = await getPayload({ config });
+  return payload.find({
+    collection: 'uygulamalar', depth: 1, draft: false, limit, sort: 'sira',
+    where: { hizmetler: { contains: serviceId } }, overrideAccess: false,
+  });
+}
+
 export async function getPublishedService(slug: string) {
   const payload = await getPayload({ config });
   const result = await payload.find({

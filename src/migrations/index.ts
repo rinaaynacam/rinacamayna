@@ -7,6 +7,7 @@ import * as migration_20260925_095722_panel_ve_icerik_sadelestirme from './20260
 import * as migration_20260925_101426_site_renkleri from './20260925_101426_site_renkleri';
 import * as migration_20260925_104413_kampanya_popup from './20260925_104413_kampanya_popup';
 import * as migration_20260929_201745_r2_storage_fields from './20260929_201745_r2_storage_fields';
+import * as migration_20260930_110214_uygulama_video_google_yorum from './20260930_110214_uygulama_video_google_yorum';
 
 export const migrations = [
   {
@@ -52,6 +53,11 @@ export const migrations = [
   {
     up: migration_20260929_201745_r2_storage_fields.up,
     down: migration_20260929_201745_r2_storage_fields.down,
-    name: '20260929_201745_r2_storage_fields'
+    name: '20260929_201745_r2_storage_fields',
+  },
+  {
+    up: migration_20260930_110214_uygulama_video_google_yorum.up,
+    down: migration_20260930_110214_uygulama_video_google_yorum.down,
+    name: '20260930_110214_uygulama_video_google_yorum'
   },
 ];

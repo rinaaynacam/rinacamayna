@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { CmsImage, mediaValue } from '@/components/CmsImage';
+import { ApplicationCard } from '@/components/ApplicationCard';
 import { SiteFooter, SiteHeader } from '@/components/SiteChrome';
 import { getPublishedApplications, getSiteChromeData } from '@/lib/cms';
 
@@ -30,12 +30,6 @@ export default async function ApplicationsPage({ searchParams }: Props) {
   const visibleApplications = categorySlug
     ? applications.filter(application => application.hizmetler?.some(service => typeof service === 'object' && service.slug === categorySlug))
     : applications;
-  const images = visibleApplications.flatMap((application, applicationIndex) =>
-    (application.gorseller ?? []).flatMap((value, imageIndex) => {
-      const image = mediaValue(value);
-      return image ? [{ application, applicationIndex, image, imageIndex }] : [];
-    }),
-  );
 
   return <>
     <SiteHeader site={chrome.site} header={chrome.header} contact={chrome.contact} />
@@ -50,19 +44,8 @@ export default async function ApplicationsPage({ searchParams }: Props) {
         {[...categories].map(([slug, name]) => <Link href={`/uygulamalar?kategori=${encodeURIComponent(slug)}`} className={`application-filter ${categorySlug === slug ? 'is-active' : ''}`} aria-current={categorySlug === slug ? 'page' : undefined} key={slug}>{name}</Link>)}
       </nav>}
 
-      {images.length > 0 ? <section className="application-gallery" aria-label="Yayınlanmış uygulama görselleri">
-        {images.map(({ application, applicationIndex, image, imageIndex }, index) => <article className="application-gallery-card" key={`${application.id}-${image.id}-${imageIndex}`}>
-          <div className="application-gallery-image"><CmsImage media={image} priority={index === 0} sizes="(max-width: 780px) 100vw, (max-width: 1100px) 50vw, 33vw" /></div>
-          <div className="application-gallery-copy">
-            <p className="eyebrow">{String(applicationIndex + 1).padStart(2, '0')} / {application.kullanim || 'UYGULAMA'}</p>
-            <h2>{application.ad}</h2>
-            <p>{application.ozet}</p>
-            {(application.malzeme || application.islem) && <dl>
-              {application.malzeme && <><dt>Malzeme</dt><dd>{application.malzeme}</dd></>}
-              {application.islem && <><dt>İşlem</dt><dd>{application.islem}</dd></>}
-            </dl>}
-          </div>
-        </article>)}
+      {visibleApplications.length > 0 ? <section className="application-gallery" aria-label="Yayınlanmış uygulamalar">
+        {visibleApplications.map((application, index) => <ApplicationCard application={application} index={index} priority={index === 0} key={application.id} />)}
       </section> : <section className="empty-state">
         <p className="eyebrow">GÖRSEL ARŞİVİ</p>
         <h2>Yayınlanmış uygulama görseli bulunmuyor.</h2>

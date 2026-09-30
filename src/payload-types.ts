@@ -291,8 +291,6 @@ export interface Medyalar {
    * Fotoğrafın kim tarafından çekildiği veya kullanım hakkının nereden geldiğine dair dahili kanıttır; sitede gösterilmez.
    */
   kaynak: string;
-  prefix?: string | null;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -516,6 +514,10 @@ export interface Uygulamalar {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * Detay sayfasında gösterilecek HTTPS YouTube, Vimeo veya R2 üzerindeki doğrudan MP4/WebM bağlantısı. Boş bırakılabilir.
+   */
+  video_baglantisi?: string | null;
   /**
    * Ana sayfanın koyu seçili işler bölümünde ve uygulama sayfasında gösterilecek gerçek proje fotoğraflarıdır. İlk görsel ana görsel olur.
    */
@@ -762,6 +764,10 @@ export interface Yorumlar {
    */
   kaynak_baglantisi?: string | null;
   /**
+   * Google senkronizasyonunun aynı yorumu yeniden oluşturmaması için sistem tarafından doldurulur.
+   */
+  harici_kimlik?: string | null;
+  /**
    * Kaynakta yıldız puanı varsa 1–5 arasında girin; yoksa boş bırakın.
    */
   puan?: number | null;
@@ -820,8 +826,6 @@ export interface Dosyalar {
    * Belgenin ne içerdiğini ve hangi durumda kullanılacağını açıklar.
    */
   aciklama?: string | null;
-  prefix?: string | null;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -1110,6 +1114,7 @@ export interface UygulamalarSelect<T extends boolean = true> {
   malzeme?: T;
   islem?: T;
   aciklama?: T;
+  video_baglantisi?: T;
   gorseller?: T;
   hizmetler?: T;
   sira?: T;
@@ -1206,6 +1211,7 @@ export interface YorumlarSelect<T extends boolean = true> {
   yorum?: T;
   kaynak?: T;
   kaynak_baglantisi?: T;
+  harici_kimlik?: T;
   puan?: T;
   sitede_goster?: T;
   sira?: T;
@@ -1232,8 +1238,6 @@ export interface HizmetBolgeleriSelect<T extends boolean = true> {
 export interface MedyalarSelect<T extends boolean = true> {
   alt?: T;
   kaynak?: T;
-  prefix?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -1287,8 +1291,6 @@ export interface MedyalarSelect<T extends boolean = true> {
 export interface DosyalarSelect<T extends boolean = true> {
   baslik?: T;
   aciklama?: T;
-  prefix?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -1387,11 +1389,11 @@ export interface SiteAyarlari {
    */
   kisa_aciklama: string;
   /**
-   * Seçildiğinde sitenin sol üst ve alt bölümündeki yazının yerini alır. PageSpeed için şeffaf WebP/SVG ve en fazla 100 KB kullanın; daha büyük dosyada hızlı yazı logosu gösterilir.
+   * Seçildiğinde sitenin sol üst ve alt bölümündeki kısa marka yazısının yerini alır. Sistem küçük ekranlar için optimize edilmiş türevi kullanır; en iyi sonuç için şeffaf WebP veya PNG yükleyin.
    */
   logo?: (number | null) | Medyalar;
   /**
-   * Tarayıcı sekmesi ve yer imlerinde görünür. En fazla 100 KB kullanın; daha büyük dosyada hızlı varsayılan Rina simgesi gösterilir.
+   * Tarayıcı sekmesi ve yer imlerinde görünür. Boş bırakırsanız üst ve alt bilgi logosu otomatik kullanılır. Kare WebP veya PNG en iyi sonucu verir.
    */
   favicon?: (number | null) | Medyalar;
   /**

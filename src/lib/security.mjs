@@ -30,9 +30,9 @@ export function securityHeaders(source = process.env) {
       `img-src 'self' data: blob: https://www.google-analytics.com${mediaOrigin ? ` ${mediaOrigin}` : ''}`,
       "font-src 'self' data:",
       "connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://www.googletagmanager.com",
-      "media-src 'self' blob:",
+      "media-src 'self' blob: https:",
       "worker-src 'self' blob:",
-      "frame-src 'self'",
+      "frame-src 'self' https://www.youtube-nocookie.com https://player.vimeo.com",
       "manifest-src 'self'",
     ].join('; ');
     headers.push(

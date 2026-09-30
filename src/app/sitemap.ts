@@ -29,6 +29,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const fallback = site.updatedAt ?? undefined;
   const services = (servicesResult.docs as PublicDocument[]).filter(item => item.seo?.indekslenebilir !== false);
+  const applications = (applicationsResult.docs as PublicDocument[]).filter(item => item.seo?.indekslenebilir !== false);
   const guides = (guidesResult.docs as PublicDocument[]).filter(item => item.seo?.indekslenebilir !== false);
   const redirectSources = new Set(redirectsResult.docs.map(item => item.kaynak));
   const pages = (pagesResult.docs as PublicDocument[]).filter(item => item.seo?.indekslenebilir !== false
@@ -45,6 +46,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: url('/hizmet-bolgeleri'), lastModified: latest(districtsResult.docs, fallback), changeFrequency: 'monthly', priority: 0.7 },
   ];
   for (const item of services) entries.push({ url: url(`/hizmetler/${item.slug}`), lastModified: item.updatedAt, changeFrequency: 'monthly', priority: 0.8 });
+  for (const item of applications) entries.push({ url: url(`/uygulamalar/${item.slug}`), lastModified: item.updatedAt, changeFrequency: 'monthly', priority: 0.7 });
   for (const item of guides) entries.push({ url: url(`/rehber/${item.slug}`), lastModified: item.updatedAt, changeFrequency: 'monthly', priority: 0.7 });
   for (const item of pages) entries.push({ url: url(`/${item.slug}`), lastModified: item.updatedAt, changeFrequency: 'monthly', priority: 0.6 });
   return entries;

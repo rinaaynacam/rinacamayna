@@ -57,7 +57,13 @@ export default buildConfig({
   admin: {
     user: 'yoneticiler',
     importMap: { baseDir: dirname },
-    meta: { titleSuffix: ' — Rina Cam & Ayna Yönetim' },
+    meta: { titleSuffix: ' — Mebalci Yönetim' },
+    components: {
+      graphics: {
+        Logo: '@/components/AdminBrand#AdminLogo',
+        Icon: '@/components/AdminBrand#AdminIcon',
+      },
+    },
     theme: 'light',
   },
   db: postgresAdapter({ pool: { connectionString: env.databaseURL }, push: false, migrationDir: path.resolve(dirname, 'migrations') }),

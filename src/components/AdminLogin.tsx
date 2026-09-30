@@ -16,7 +16,10 @@ export function AdminLogin() {
     } catch { setError('Giriş yapılamadı. Bilgilerinizi kontrol edin veya bir süre sonra deneyin.'); }
     finally { setBusy(false); }
   }
-  return <main style={{ maxWidth: 440, margin: '10vh auto', padding: 24 }}><h1>Rina yönetim paneli</h1>
+  return <main style={{ maxWidth: 440, margin: '6vh auto', padding: 24 }}>
+    {/* eslint-disable-next-line @next/next/no-img-element */}
+    <img src="/admin/mebalci.webp" alt="Mebalci" width="480" height="304" style={{ display: 'block', width: 240, maxWidth: '100%', height: 'auto', objectFit: 'contain', margin: '0 auto 24px' }} />
+    <h1>Mebalci yönetim paneli</h1>
     <form onSubmit={submit}><label htmlFor="username">Kullanıcı adı</label><input id="username" name="username" autoComplete="username" required style={{ display: 'block', width: '100%', padding: 12, margin: '8px 0 24px' }} />
       <label htmlFor="password">Parola</label><input id="password" name="password" type="password" autoComplete="current-password" required style={{ display: 'block', width: '100%', padding: 12, margin: '8px 0 24px' }} />
       <button type="submit" disabled={busy} style={{ minHeight: 44, padding: '8px 24px' }}>{busy ? 'Kontrol ediliyor…' : 'Giriş yap'}</button>

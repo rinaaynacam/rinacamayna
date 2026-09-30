@@ -61,6 +61,21 @@ export const safeInternalLink = (value: unknown): true | string => {
   return true;
 };
 
+export const safeVideoURL = (value: unknown): true | string => {
+  if (value == null || value === '') return true;
+  if (typeof value !== 'string' || value.length > 500) return 'Video bağlantısı en fazla 500 karakter olmalıdır.';
+  try {
+    const url = new URL(value);
+    const supportedHost = ['youtube.com', 'www.youtube.com', 'youtu.be', 'vimeo.com', 'www.vimeo.com', 'player.vimeo.com'].includes(url.hostname);
+    const directVideo = /\.(?:mp4|webm)(?:$|\?)/i.test(url.pathname + url.search);
+    return url.protocol === 'https:' && (supportedHost || directVideo)
+      ? true
+      : 'HTTPS YouTube, Vimeo veya doğrudan MP4/WebM bağlantısı kullanın.';
+  } catch {
+    return 'Geçerli bir video bağlantısı girin.';
+  }
+};
+
 const unsafeRedirectEncoding = /%(?:2f|5c|00|0d|0a)/i;
 
 export const safeRedirectSource = (value: unknown): true | string => {

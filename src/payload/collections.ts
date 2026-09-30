@@ -1,6 +1,6 @@
 import type { CollectionConfig, Field } from 'payload';
 import { adminOnly, editorCannotPublish, publishedAndApproved, signedIn, staffField } from '@/lib/access';
-import { richContentField, safeRedirectSource, safeRedirectTarget, seoFields, slugField, verificationFields } from './fields';
+import { richContentField, safeRedirectSource, safeRedirectTarget, safeVideoURL, seoFields, slugField, verificationFields } from './fields';
 import { validateAndSanitizeImageUpload, validatePDFUpload } from '../lib/uploads';
 
 const contentAccess: CollectionConfig['access'] = {
@@ -98,6 +98,8 @@ export const Uygulamalar: CollectionConfig = {
     { name: 'islem', label: 'Doğrulanmış işlem', type: 'text',
       admin: { description: 'Projede gerçekten uygulanan kesim, kenar, temper veya montaj işlemini kaydeder.' } },
     richContentField('aciklama', 'Uygulama açıklaması'),
+    { name: 'video_baglantisi', label: 'Uygulama videosu', type: 'text', maxLength: 500, validate: safeVideoURL,
+      admin: { description: 'Detay sayfasında gösterilecek HTTPS YouTube, Vimeo veya R2 üzerindeki doğrudan MP4/WebM bağlantısı. Boş bırakılabilir.' } },
     { name: 'gorseller', label: 'Gerçek uygulama görselleri', type: 'upload', relationTo: 'medyalar', hasMany: true, required: true,
       admin: { description: 'Ana sayfanın koyu seçili işler bölümünde ve uygulama sayfasında gösterilecek gerçek proje fotoğraflarıdır. İlk görsel ana görsel olur.' } },
     { name: 'hizmetler', label: 'Kategori / ilgili hizmetler', type: 'relationship', relationTo: 'hizmetler', hasMany: true,
@@ -180,6 +182,9 @@ export const Yorumlar: CollectionConfig = {
       admin: { description: 'Google yorumunun veya doğrulanabilir kaynak sayfasının https:// ile başlayan bağlantısı. Web sitesi içi yorumlarda boş kalabilir.' },
       validate: (value: unknown) => value == null || value === '' || (typeof value === 'string' && /^https:\/\/[^\s]+$/i.test(value))
         ? true : 'https:// ile başlayan geçerli bir bağlantı girin.' },
+    { name: 'harici_kimlik', label: 'Google yorum kimliği', type: 'text', unique: true,
+      admin: { readOnly: true, description: 'Google senkronizasyonunun aynı yorumu yeniden oluşturmaması için sistem tarafından doldurulur.' },
+      access: { read: staffField, create: staffField, update: staffField } },
     { name: 'puan', label: 'Puan', type: 'number', min: 1, max: 5,
       admin: { description: 'Kaynakta yıldız puanı varsa 1–5 arasında girin; yoksa boş bırakın.' } },
     { name: 'sitede_goster', label: 'Sitede göster', type: 'checkbox', defaultValue: true,
@@ -215,7 +220,12 @@ export const Medyalar: CollectionConfig = {
     ...verificationFields(),
   ],
   upload: {
-    staticDir: 'media-local', adminThumbnail: 'kucuk', focalPoint: true,
+    staticDir: 'media-local',
+    adminThumbnail: ({ doc }) => {
+      const media = doc as { sizes?: { kucuk?: { url?: string | null } }; url?: string | null };
+      return media.sizes?.kucuk?.url || media.url || null;
+    },
+    focalPoint: true,
     mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/avif'],
     pasteURL: false,
     withMetadata: false,
